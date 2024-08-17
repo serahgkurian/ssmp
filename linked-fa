@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+struct node {
+    int val;
+    struct node *next;
+};
+
+struct file {
+    char name[20];
+    struct node *start;
+};
+
+struct file files[10]; // Array to store file details
+int num = 0;
+int blocks[100] = {0}; // Array to keep track of allocated blocks
+
+void make(int value) {
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->val = value;
+    temp->next = NULL;
+    if (files[num].start == NULL) {
+        files[num].start = temp;
+    } else {
+        struct node *ptr = files[num].start;
+        while (ptr->next != NULL) {
+            ptr = ptr->next;
+        }
+        ptr->next = temp;
+    }
+}
+
+void create() {
+    int start, num_blocks;
+    printf("Enter the file name: ");
+    scanf("%s", files[num].name);
+    
+    printf("Enter the starting block: ");
+    scanf("%d", &start);
+    
+    if (blocks[start]) {
+        printf("Block %d is already allocated, please try again.\n", start);
+        return;
+    }
+
+    printf("Enter the number of blocks: ");
+    scanf("%d", &num_blocks);
+    
+    files[num].start = NULL;
+
+    int current_block = start;
+    for (int i = 0; i < num_blocks; i++) {
+        while (blocks[current_block]) {
+            current_block = rand() % 100;
+        }
+        blocks[current_block] = 1;
+        make(current_block);
+    }
+    num++;
+}
+
+void display() {
+    printf("Index\tFile Name\tBlocks Used\n");
+    for (int i = 0; i < num; i++) {
+        struct node *ptr = files[i].start;
+        printf("%d\t%s\t\t", i, files[i].name);
+        while (ptr != NULL) {
+            printf("%d ", ptr->val);
+            ptr = ptr->next;
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int choice;
+    srand(time(0)); // Seed the random number generator
+
+    while (1) {
+        printf("Enter your choice (1: Create, 2: Display, 3: Exit): ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                create();
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
