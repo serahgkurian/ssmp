@@ -1,0 +1,119 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+int arr1[100]={0}; //an array for indexing , just like hashing 
+int rmg=100; // remainig blocks 
+struct node
+{
+    
+   struct node *next;
+   int blk;
+};
+struct arr
+{
+    struct node *start; // has the starting node 
+    int size;
+    char name[10];
+    
+}files[100];
+int filecount=0;
+struct node *head,*ptr=NULL;
+
+void make(int no)
+{
+    struct node *temp=(struct node *)malloc(sizeof(struct node));
+    temp->blk=no;
+    if(head==NULL)
+    {
+        head=temp;
+        ptr=head;
+        files[filecount++].start=head; //filecount++ happens here only for once
+        
+    }
+    else
+    {
+        ptr->next=temp;
+        ptr=ptr->next;
+    }
+    
+    
+}
+void create()
+{
+  printf("enter ur startnode :");
+  int s; int tot;
+  scanf("%d",&s);
+  head=NULL;
+  
+  if(!arr1[s])
+  {
+      
+      
+      printf("enter the no. of blocks :");
+      scanf("%d",&tot); 
+      printf("enter the file name :");
+      scanf("%s",files[filecount].name);
+      files[filecount].size=tot;
+      
+      arr1[s]=1;
+      make(s); //making the head node here
+      
+      rmg--;
+      int i=0; 
+      while(i<tot-1) // we are considering the start node also so -1 
+      {
+          int v=rand()%100;
+      
+      if(arr1[v])
+      {
+          continue;
+      }
+      else if(rmg==0)
+      {
+          printf("blocks over-");
+          break;
+      }
+      else
+      {
+          make(v);
+          arr1[v]=1;
+          i++;
+          rmg--;
+          
+      }
+    }
+    }
+  else
+  {
+      printf("already occupied");
+  }
+}
+
+void display()
+{
+    for(int i=0;i<filecount;i++)
+    {
+        printf("%s\t%d\t",files[i].name,files[i].size);
+        //printf("%d\t",files[i].start->blk);
+        for(ptr=files[i].start;ptr!=NULL;ptr=ptr->next)
+        {
+            printf("%d\t",ptr->blk);
+        }
+    printf("\n");
+    }
+}
+ void  main()
+{
+    while(1)
+    {
+        int c;
+        printf("1.create, 2. display 0.exit");
+        scanf("%d",&c);
+        switch(c)
+        {
+            case 1: if(rmg) {create();} else printf("blocks over ");  break;
+            case 2: display(); break;
+            case 0: exit(1);
+        }
+    }
+}
