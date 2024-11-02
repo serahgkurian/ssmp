@@ -1,0 +1,77 @@
+#include <stdlib.h>
+#include <stdio.h>
+struct s
+{
+   char filen[10];
+   int st;
+   int n;
+}mem[10];
+int *arr;
+int v=0;
+void create()
+{
+  printf("enter the starting block\n");
+  int start;
+  scanf("%d",&start);
+  printf("length of blocks\n");
+  int length;
+  scanf("%d",&length);
+  if(arr[start]==1)
+  {
+      printf("already allocated ");
+      return;
+  }
+  for(int i=start;i<=start+length;i++)
+  {
+      if(arr[i]==1)
+      {
+          printf("%d is already allocated",i);
+          return;
+      }
+  }
+  mem[v].st=start; mem[v].n=length; 
+  printf("enter the name of the file");
+  scanf("%s",mem[v++].filen);
+  for(int i=start;i<=start+length;i++)
+  {
+      arr[i]=1;
+  }
+}
+void display()
+{
+    printf("size\tfilename\tblocks used\n");
+    for(int i=0;i<v;i++)
+    {
+        printf("%d\t%s\t",mem[i].n,mem[i].filen);
+        for(int j=0;j<mem[i].n;j++)
+        {
+            printf("%d\t",mem[i].st+j);
+        }
+        printf("\n");
+    }
+}
+int main()
+{
+    int memsize; int blksize;
+   printf("enter the mem size");
+   scanf("%d",&memsize);
+   printf("enter the blocksize");
+   scanf("%d",&blksize);
+   int b=memsize/blksize;
+   arr = (int *)malloc(b*sizeof(int));
+   while(1)
+   {
+       printf("1. create 2.display 3.exit");
+       int ch;
+       scanf("%d",&ch);
+       switch(ch)
+       {
+           case 1: create(); break;
+           case 2: display(); break;
+           case 3: break;
+           
+       }
+   }
+
+    return 0;
+}
